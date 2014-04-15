@@ -68,7 +68,39 @@ finger 返回信息：
 ●No mail.                              /var/spool/mail 当中的邮箱资料
 ●No Plan.                              ~/.plan 档案，并将该档案取出并说明
 ------------------------------------------------------------------
+/sbin/nologin                           系统账号使用的 shell
+/etc/nologin.txt                        /sbin/nologin 登录时的说明文字
+------------------------------------------------------------------
+名词解释：
 ACL                                     访问控制列表 Access Control List
+PAM                                     嵌入式模块 Pluggable Authentication Modules
+API                                     应用程序编程接口 Application Programming Interface
+------------------------------------------------------------------
+PAM：
+●验证类别 Type                         身份验证(auth) 检验权限(account) 会话期间(session) 密码的修订(password)
+●验证的控制旗标 Control Flag           成功失败都会进行后续流程(required) 失败立即终止(requisite) 成功立即终止(sufficient) 显示信息并不用于验证(optional)
+
+PAM 相关模块
+●/etc/pam.d/*                          每个程序的 PAM 配置文件
+●/lib/security/*                       PMA 档安的实际放置目录
+●/etc/security/*                       其他 PAM 环境的配置文件
+●/usr/share/doc/pam-*/                 PAM 说明文件
+
+常用 PAM 模块：
+●pam_securetty.so                      限制 root 账号只能从安全的终端登录
+●pam_nologin.so                        限制一般用户是否能登录主机
+●pam_selinux.so                        针对程序进行细部权限管理
+●pam_console.so                        通过特殊终端登入系统
+●pam_loginuid.so                       规范验证使用者的 UID
+●pam_env.so                            设定环境变量
+●pam_unix.so                           认证、账号许可证管理、登录文件记录等
+●pam_cracklib.so                       检验密码强度
+●pam_limits.so                         限定用户使用系统资源，同 [ ulimit ] 命令
+
+其他相关档案：
+●/etc/securetty/limits.conf            管理员可以通过此文档来限制用户使用的系统资源，同 [ ulimit ] 命令
+●/var/log/secure                       无法预期的错误日志
+●/var/log/messages                     消息日志
 ------------------------------------------------------------------
 passwd                                  修改用户密码
 groups                                  查看当前用户有效与支持群组
@@ -93,4 +125,27 @@ mount                                   查看挂载信息
 dumpe2fs                                显示当前磁盘状态
 getfacl                                 获取某个文档或目录的ACL设定项
 setfacl                                 设定某个文件或目录的ACL规范
+------------------------------------------------------------------
+su                                      切换用户
+su -                                    将用户变换为 root
+sudo                                    执行 root 或其他用户的指令
+exit                                    退出终端或离开当前用户身份
+visudo                                  修改 /etc/sudoers 文档命令
+------------------------------------------------------------------
+w                                       当前登录系统的用户
+who                                     同 [ w ] 命令
+last                                    用户登录时间
+lastlog                                 所有账号最后登录时间
+------------------------------------------------------------------
+write                                   将消息发送给接收者
+mesg y/n                                接收/不接收消息
+wall                                    系统广播
+mail                                    邮箱
+------------------------------------------------------------------
+pwck                                    检查 /etc/passwd 账号配置文件内的信息
+grpck                                   检查 /etc/group 群组配置文件内的信息
+pwconv                                  将 /etc/passwd 内的账号密码移动到 /etc/shadow
+pwunconv                                将 /etc/shadow 内的密码写回到 /etc/passwd，会删除 /etc/shadow 文件，不要使用此命令
+chpasswd                                读入未加密的密码，经过加密后将新密码写入 /etc/shadow 中
+grpconv                                 将 /etc/group 内的用户组与密码移动到 /etc/gshadow
 ------------------------------------------------------------------
