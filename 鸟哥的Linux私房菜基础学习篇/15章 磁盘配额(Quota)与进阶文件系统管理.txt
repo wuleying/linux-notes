@@ -1,6 +1,7 @@
 第十五章、磁盘配额(Quota)与进阶文件系统管理
 
 ------------------------------------------------------------------
+名词解释：
 Quota                                   用户磁盘空间限额
 
 Quota 比较常使用的情况：
@@ -38,6 +39,7 @@ Quota 流程：
 ●inode 的 soft 限值
 ●inode 的 hard 限值
 ------------------------------------------------------------------
+相关指令：
 quotacheck                              扫描文件系统并建立 Quota 记录文件，常用方式：[ quotacheck -avug ]
 quotaon                                 启动 Quota 服务
 quotaoff                                关闭 Quota 服务
@@ -46,4 +48,67 @@ quota                                   单一用户的 Quota 报表
 repquota                                针对文件系统的 Quota 报表
 warnquota                               对超过限额用户发出警告信
 setquota                                直接于指令中设定 Quota 限额
+------------------------------------------------------------------
+名词解释：
+RAID                                    容错式廉价磁盘阵列 Redundant Arrays of Inexpensive Disks
+SCSI                                    小型计算机系统接口 Small Computer System Interface
+
+RAID 等级：
+●RAID-0                                stripe 等量模式，效能最佳
+●RAID-1                                mirror 镜像模式，完整备份
+●RAID 0+1                              先组成 RAID-0,再将多组 RAID-0 组成 RAID-1
+●RAID 1+0                              与 RAID 0+1 相反
+●RAID 5                                效能与数据备份的均衡考虑，使用一块磁盘作为 parity (奇偶校验)的存储
+●RAID 6                                使用两块磁盘作为 parity 的存储
+●Spare Disk                            预备磁盘
+
+磁盘阵列的优点：
+●数据安全与可靠性
+●读写效能
+●容量
+
+磁盘阵列类别：
+●hardware RAID                         硬件磁盘阵列
+●software RAID                         软件磁盘阵列
+------------------------------------------------------------------
+相关指令：
+mdadm                                   软件磁盘阵列的设置
+cat /proc/mdstat                        查看系统软件磁盘阵列的情况
+------------------------------------------------------------------
+名词解释：
+LVM                                     逻辑卷管理 Logical Volume Manager
+PV                                      实体卷 Physical Volume
+VG                                      卷群组 Volume Group
+PE                                      实体扩展区块 Physical Extend
+LV                                      逻辑卷 Logical Volume
+
+数据写入 LV 的方式：
+●linear                                线性模式
+●triped                                交错模式
+
+相关指令：
+pvcreate                                将实体分区建立为 PV
+pvscan                                  搜索当前系统里任何具有 PV 的磁盘
+pvdisplay                               显示当前系统上 PV 的状态
+pvremove                                删除 PV
+
+vgcreate                                建立 VG
+vgscan                                  搜索当前系统里的 VG
+vgdisplay                               显示当前系统上 VG 的状态
+vgextend                                在 VG 内增加 PV
+vgreduce                                在 VG 内移除 PV
+vgchange                                设定 VG 是否启动
+vgremove                                删除 VG
+
+lvcreate                                建立 LV
+lvscan                                  搜索当前系统里的 LV
+lvdisplay                               显示当前系统上 LV 的状态
+lvextend                                在 LV 内增加容量
+lvreduce                                在 LV 内减少容量
+lvremove                                删除 LV 
+lvresize                                对 LV 容量大小进行调整
+lvcreate -s                             创建快照 snapshot
+
+dumpe2fs                                显示当前磁盘状态
+resize2fs                               文件系统大小调整工具
 ------------------------------------------------------------------
