@@ -137,6 +137,58 @@ vmstat 显示的数据项：
 ●io                                            磁盘读写 每秒被中断的程序次数(in) 每秒进行的事件切换次数(cs)
 ●cpu                                           CPU项目 非核心层 CPU 使用状态(us) 核心层 CPU 使用状态(sy) 闲置状态(id) 等待 I/O 所耗费的 CPU 状态(wa) 被虚拟机所盗用的 CPU 使用状态(st)
 ------------------------------------------------------------------
+特殊档案与程序
+
+SUID 如何被一般用户执行及其特点：
+●SUID 权限仅对二进制程序(binary program)有效
+●执行者对该程序必须有 x 的可执行权限
+●本权限仅在执行程序的过程中有效(run-time)
+●执行者将具有该程序拥有者(owner)的权限
+
+/proc 目录下各文档说明：
+●/proc/cmdline                                 加载核心时所下达的相关参数
+●/proc/cpuinfo                                 本机的 CPU 相关信息，包括频率、类型与运算功能等
+●/proc/devices                                 系统各个主要装置的装置代号，与 [ mknod ] 相关
+●/proc/filesystems                             当前系统已经加载的文件系统
+●/proc/interrupts                              当前系统的 IRQ 分配状态
+●/proc/ioports                                 当前系统各个装置所配置的 I/O 地址
+●/proc/kcore                                   内存的大小
+●/proc/loadavg                                 负载的平均值，与 [ top/uptime ] 相关
+●/proc/meminfo                                 内存信息，与 [ free ] 相关
+●/proc/modules                                 已加载的模块列表
+●/proc/mounts                                  系统已挂载的数据，与 [ mount ] 相关
+●/proc/swaps                                   系统的置换空间使用情况
+●/proc/partitions                              分区信息，与 [ fdisk -l ] 相关
+●/proc/pci                                     PCI总线每个装置的详细情况
+●/proc/uptime                                  [ uptime ] 指令显示的信息
+●/proc/version                                 核心版本，与 [ uname -a ] 相关
+●/proc/bus/*                                   一些总线装置，还有 USB 的装置也记录在此
+------------------------------------------------------------------
+SELinux
+
+名词：
+●SELinux                                       安全强化的 Linux (Security Enhanced Linux)
+●DAC                                           自主式访问控制 (Discretionary Access Control)
+●MAC                                           委任式访问控制 (Mandatory Access Control)
+●AVC                                           记录所有与 SELinux 相关的存取统计资料 (access vector cache)
+
+SELinux 的运作模式：
+●Subject                                       主体(程序)
+●Object                                        目标(文件系统)
+●Policy                                        策略，targeted 预设策略，针对网络服务限制较多，对本机限制较少；strict 完整的限制，比较严格
+●security context                              安全性文本
+
+SELinux 支持的三种模式：
+●enforcing                                     强制模式
+●permissive                                    宽容模式
+●disabled                                      关闭
+
+SELinux 所需的服务：
+●setroubleshoot                                错误信息写入 /var/log/messages
+●auditd                                        详细信息写入 /var/log/audit/audit.log
+
+SELinux 的策略与规则管理：
+------------------------------------------------------------------
 相关指令：
 ps                                              观察某个时间点的程序运行情况
 ps aux                                          观察系统所有的程序
@@ -161,4 +213,22 @@ uptime                                          观察系统启动时间与工�
 netstat                                         显示与IP、TCP、UDP 和 ICMP 协议相关的统计数据，一般用于检验本机各端口的网络连接情况
 dmesg                                           分析核心产生的信息
 vmstat                                          侦测系统资源变化
+
+fuser                                           由文档或文件系统找出正在使用该文档的程序
+lsof                                            列出被程序所开启的档案文件名
+pidof                                           找出某个正在执行的程序的 PID
+
+ps -Z                                           查看程序的安全性文本
+getenforce                                      查询 SELinux 的模式
+setenforce 0/1                                  切换 SELinux 的模式 (0 宽容模式/1 强制模式)
+sestatus                                        显示 SELinux 的状态
+chcon                                           重设 SELinux 安全性文本
+restorecon                                      使用预设的安全性文本还原
+sealert -l                                      查看完整的安全性文本错误说明
+audit2why                                       查看 SELinux 错误信息回报
+seinfo                                          查看 SELinux 安全策略提供的相关规则
+sesearch                                        查看 SELinux 规则的详细信息
+getsebool                                       列出所有 SELinux bool 数值清单列表与内容
+setsebool                                       设置 SELinux bool 数值
+semanage                                        查询默认安全性文本
 ------------------------------------------------------------------
