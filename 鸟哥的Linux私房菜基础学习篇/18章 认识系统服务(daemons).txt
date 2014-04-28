@@ -1,0 +1,54 @@
+第十八章、认识系统服务(daemons)
+
+------------------------------------------------------------------
+名词：
+●service                                       服务。常驻在内存中的程序，可以提供一系列系统或网络功能
+●daemons                                       守护进程。达成某个服务的程序称为守护进程
+------------------------------------------------------------------
+daemons 的主要分类：
+●stand_alone                                   可以自行单独启动服务
+●super daemon                                  一支特殊的 daemon 来统一管理。处理模式有两种：多线程(multi-threaded) 单线程(single-threaded)
+
+daemons 工作形态的类型：
+●signal-control                                这种 daemon 是通过讯号来管理，只要有客户端的需求进来就会立即启动去处理
+●interval-control                              每隔一段时间就主动的去执行某项工作
+
+daemons 启动脚本的存放位置：
+●/etc/init.d/*                                 启动脚本
+●/etc/sysconfig/*                              各服务的初始化环境配置文件
+●/etc/xinetd.conf                              super daemon 配置文件
+●/etc/xinetd.d/*                               super daemon 与置文件
+●/etc/*                                        各服务各自的配置文件
+●/var/lib/*                                    各服务产生的数据库文件
+●/var/run/*                                    各服务的程序 PID 记录
+
+默认值配置文件 /xinetd.conf：
+●disable                                       是否取消
+●id                                            服务识别
+●server                                        程序文件名
+●server_args                                   程序参数
+●user                                          服务所属 UID
+●group                                         服务所属组
+●socket_type                                   封包类型
+●protocol                                      封包类型，与 socket_type 重复，可不指定
+●wait                                          联机机制
+●instances                                     最大联机数
+●per_source                                    单一用户来源
+●cps                                           新联机机制
+●log_type                                      登录档类型
+●log_on_success                                登录状态，成功
+●log_on_failure                                登录状态，失败
+●env                                           额外变量设定
+●port                                          非正规端口
+●redirect                                      服务转址
+●includedir                                    呼叫外部设定
+●bind                                          服务接口绑定
+●interface                                     同 bind
+●only_from                                     防火墙机制，白名单
+●no_access                                     防火墙机制，黑名单
+●access_times                                  时间控管
+●umask                                         设定用户建立文档或目录时的默认权限
+------------------------------------------------------------------
+相关指令：
+service                                         服务管理
+------------------------------------------------------------------
