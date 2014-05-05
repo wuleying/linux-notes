@@ -1,0 +1,121 @@
+第二十章、开机流程、模块管理与 Loader
+
+------------------------------------------------------------------
+系统开机的流程：
+●加载 BIOS 的硬件信息与进行自我测试，并依据设定取得第一个可开机的装置
+●读取并执行第一个开机装置内 MBR 的 boot Loader (grub, spfdisk 等程序)
+●依据 boot loader 的设定加载 Kernel ，Kernel 会开始侦测硬件与加载驱动程序
+●在硬件驱动成功后，Kernel 会主动呼叫 init 程序，而 init 会取得 run-level 信息
+●init 执行 /etc/rc.d/rc.sysinit 档案来准备软件执行的作业环境 (如网络、时区等)
+●init 执行 run-level 的各个服务的启动 (script 方式)
+●init 执行 /etc/rc.d/rc.local 档案
+●init 执行终端机仿真程序 mingetty 来启动 login 程序，最后就等待用户登入
+------------------------------------------------------------------
+名词
+●BIOS                                          基本输入输出系统 Basic Input Output System
+●POST                                          开机自我检测 Power-on Self Test
+●MBR                                           主启动记录区 Master Boot Record
+●initrd                                        虚拟文件系统 Initial RAM Disk
+●PnP                                           即插即用 Plug and Play
+------------------------------------------------------------------
+Run level 执行等级：
+●0                                             halt 系统直接关机
+●1                                             single user mode 单人维护模式
+●2                                             Multi-user, without NFS 类似于 runlevel 3，但没有 NFS 服务
+●3                                             Full multi-user mode 完整含有网络功能的纯文本模式
+●4                                             unused 系统保留功能
+●5                                             X11 与 runlevel 3 类似，但加载使用 X Window
+●6                                             reboot 重新启动
+------------------------------------------------------------------
+/etc/inittab 的内容与语法：
+●设定项目
+●run level
+●init 的动作项目
+●指令项目
+------------------------------------------------------------------
+/etc/rc.d/rc.sysinit 主要工作：
+●取得网络环境与主机类型
+●测试与挂载内存装置 /proc 及 USB 装置 /sys
+●是否启动 SELinux
+●启动系统的随机数生成器
+●设定终端机(console)字形
+●设定显示于开机过程中的欢迎画面(text banner)
+●设定系统时间(clock)与时区设定
+●接口设备的侦测与 PnP 参数的测试
+●用户自定义模块的加载
+●加载核心的相关设定
+●设定主机名与初始化电源管理模块(ACPI)
+●初始化软件磁盘阵列
+●初始化 LVM 的文件系统功能
+●以 fsck 检验磁盘文件系统
+●进行磁盘配额 quota 的转换(非必要)
+●重新以可擦写模式挂载系统磁盘
+●启动 quota 功能
+●启动系统虚拟随机数生成器(pseudo-random)
+●清除开机过程当中的临时文件
+●将开机相关信息加载到 /var/log/dmesg 中
+------------------------------------------------------------------
+开机过程中主要用到的配置文件：
+●/etc/modprobe.conf                            关于模块
+●/etc/sysconfig/authconfig                     规范使用者的身份认证机制
+●/etc/sysconfig/clock                          设定 Linux 主机的时区
+●/etc/sysconfig/i18n                           设定语系
+●/etc/sysconfig/keyboard                       设定键盘
+●/etc/sysconfig/mouse                          设定鼠标
+●/etc/sysconfig/network                        是否启动网络及设定主机名与网关
+●/etc/sysconfig/network-scripts                设定网络卡
+------------------------------------------------------------------
+Run level 的切换方法：
+●修改 /etc/inittab 内的设定项目，即 [ id:5:initdefault: ] 里的数字
+●暂时改变系统的 run level 使用 [ init 0-6 ] 指令
+------------------------------------------------------------------
+相关指令：
+dmesg                                           显示开机信息
+runlevel                                        显示当前系统的 run level
+------------------------------------------------------------------
+核心与核心模块
+
+核心与核心模块存放位置：
+●核心                                          /boot/vmlinuz(/boot/vmlinuz-version)
+●核心解压缩所需 RAM Disk                       /boot/initrd (/boot/initrd-version)
+●核心模块                                      /lib/modules/version/kernel 或 /lib/modules/$(uname -r)/kernel
+●核心原始码                                    /usr/src/linux(安装才会有)
+●核心版本                                      /proc/version
+●系统核心功能                                  /proc/sys/kernel
+------------------------------------------------------------------
+相关指令：
+depmod                                          分析可载入模块的相依性
+lsmod                                           显示核心加载的模块
+modinfo                                         显示模块信息
+modprobe                                        自动处理可载入模块
+insmod                                          载入模块
+rmmod                                           移除模块
+------------------------------------------------------------------
+Boot Loader: Grub
+
+boot loader 的两个 stage：
+●执行 boot loader 主程序
+●主程序加载配置文件
+
+/boot/grub/menu.lst 配置文件：
+●default=0                                     默认开机选项，使用第一个开机选项
+●timeout=5                                     五秒内未动键盘，使用默认选单开机
+●splashimage=(hd0,0)/grub/splash.xpm.gz        背景图示所在的档案
+●hiddenmenu                                    读秒时是否显示完整的选单画面
+
+initrd 使用场景：
+●根目录所在磁盘为 SATA、USB 或 SCSI 等连接接口
+●根目录所在文件系统为 LVM, RAID 等特殊格式
+●根目录所在文件系统为非传统 Linux 认识的文件系统时
+●其他必须要在核心加载时提供的模块
+
+使用 grub 注意事项：
+●如果是从其他 boot loader 转成 grub 时，得先使用 grub-install 安装 grub 配置文件
+●开始编辑 menu.lst 这个重要的配置文件
+●透过 grub 来将主程序安装到系统中，如 MBR 的 (hd0) 或 boot sector 的 (hd0,0) 等
+------------------------------------------------------------------
+相关指令：
+mkinitrd                                        重建 initrd
+grub-install                                    安装 grub
+grub                                            进入 grub shell
+------------------------------------------------------------------
