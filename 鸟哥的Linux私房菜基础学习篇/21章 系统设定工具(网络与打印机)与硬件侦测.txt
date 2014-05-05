@@ -1,0 +1,68 @@
+第二十一章、系统设定工具(网络与打印机)与硬件侦测
+
+------------------------------------------------------------------
+CentOS 系统设定工具 setup
+
+setup 主选单：
+●Authentication configuration                  与使用者身份认证有关的设定
+●Firewall configuration                        简单设定防火墙与 SELinux 的启动模式
+●Keyboard configuration                        键盘按键对应表
+●Network configuration                         设置网络参数
+●System services                               设定一些系统服务是否开机启动
+●Timezone configuration                        时区设定
+●X configuration                               X Window 相关设定
+------------------------------------------------------------------
+CUPS 设定打印机
+
+常见的打印服务：
+●CUPS(主流)
+●LPRng
+
+CUPS 支持的联机模式：
+●socket
+●LPD(Line Pritner Daemon)
+●IPP(Internet Printing Protocol)
+●SMB(Server Message Block)
+
+CUPS 几个重要的档案：
+●/etc/cups/printers.conf                       打印机的设定值
+●/etc/cups/cupsd.conf                          CUPS的主要配置文件
+●/etc/cups/ppd/*.ppd                           各个打印机的驱动程序
+
+手动设定打印机步骤：
+●下载合适的 PPD 驱动程序
+●启动 CUPS 及打印机
+●使用 [ lpadmin ] 进行打印机的建立和删除
+●打印机状态的观察
+●利用 [ lpr ] 和 [ lp ] 来产生打印作业
+●打印作业的观察 [ lpd ] 与删除 [ lprm ]
+------------------------------------------------------------------
+相关指令：
+ping                                            测试与目标主机的联通性
+nmap                                            网络扫描与嗅探工具包
+netstat -tlunp | grep 631                       检查是否启动了 CUPS
+
+lpadmin                                         管理打印机
+lpstat                                          查看打印作业状态
+lpr                                             文件打印
+lp                                              打印命令
+lpq                                             查看打印队列
+lprm                                            删除打印作业
+------------------------------------------------------------------
+硬件数据收集与驱动及 lm_sensors
+
+相关指令：
+fdisk                                           磁盘的分区、格式化,以及自动开机挂载
+hdparm                                          观察磁盘的信息与测试读写顺序
+dmesg                                           观察核心运作过程当中所显示的各项讯息记录
+vmstat                                          分析系统(CPU/RAM/IO)当前状态
+lspci                                           列出整个 PC 系统的 PCI 接口装置
+lsusb                                           列出系统各个 USB 端口的状态
+iostat                                          与 [ vmstat ] 类似，实时列出整个 CPU 与接口的输入/输出状态
+lsmod                                           显示已载入系统的模块
+modinfo                                         显示核心模块的信息
+mknod                                           创建一个设备文件
+
+sensors                                         侦测温度、电压等硬件参数
+sensors-detect                                  主板芯片组侦测
+------------------------------------------------------------------
