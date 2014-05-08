@@ -1,0 +1,128 @@
+第二十三章、软件安装：RPM, SRPM 与 YUM 功能
+
+------------------------------------------------------------------
+软件管理员简介
+
+安装软件最常见的两种方式：
+●DPKG                                          衍生亍 Debian 的版本大多使用这个机制，包括 B2D、Ubuntu 等
+●RPM                                           衍生于 Red Hat 的版本大多使用这个机制，包括 Fedora、CentOS、SuSE 等
+
+RPM 在线升级：
+●Red Hat                                       yum
+●SuSE                                          Yast Online Update (YOU)
+●Mandriva                                      urpmi
+
+操作硬件平台：
+●i386                                          几乎适用所有 x86 平台
+●i586                                          针对 586 等级计算机进行优化编译
+●i686                                          x86 平台目前最主要的平台等级
+●x86_64                                        针对 64 位的 CPU 进行优化编译
+●noarch                                        没有任何硬件等级限制
+
+RPM 的优点：
+●RPM 内含已经编译过的程序不配置文件等数据，可以让用户免除重新编译的困扰
+●RPM 在被安装之前，会先检查系统的硬盘容量、操作系统版本等，可避免档案被错误安装
+●RPM 档案本身提供软件版本信息、相依属性软件名称、软件用途说明、软件所属档案等信息，便于了解软件
+●RPM 管理的方式使用数据库记录 RPM 档案的相关参数，便于升级、移除、查询与验证
+
+相关名词：
+●RPM                                           RedHat Package Manager
+●SRPM                                          Source RPM
+------------------------------------------------------------------
+RPM 软件管理程序 rpm
+
+RPM 默认安装的路径：
+●/etc                                          一些配置文件的放置目录
+●/usr/bin                                      一些可执行文档
+●/usr/lib                                      一些程序使用的动态函式库
+●/usr/share/doc                                一些基本的软件使用手册与说明文件
+●/usr/share/man                                一些 man page 档案
+
+RPM 安装时常用的选项与说明：
+●--nodeps                                      忽略软件依赖问题
+●--replacefiles                                覆盖已存在的文档
+●--replacepkgs                                 重新安装已存在的软件
+●--force                                       相当于 [ --replacefiles ] 加 [ --replacepkgs ]
+●--test                                        测试软件是否可以安装
+●--justdb                                      更新软件在数据库内的相关信息
+●--nosignature                                 忽略数字签名检查
+●--prefix                                      将软件安装到其他目录
+●--noscripts                                   不执行安装过程中的某些系统指令
+
+rpm -V 显示软件修改信息 [ SM5DLUGT c filename ]
+前八个字段含义：
+●S (file Size differs)                         档案的容量大小是否被改变
+●M (Mode differs)                              档案的类型或档案的属性 (rwx) 是否被改变
+●5 (MD5 sum differs)                           MD5 这一种指纹码的内容已经不同
+●D (Device major/minor number mis-match)       装置的主/次代码已经改变
+●L (readLink(2) path mis-match)                Link 路径已被改变
+●U (User ownership differs)                    档案的所属人已被改变
+●G (Group ownership differs)                   档案的所属群组已被改变
+●T (mTime differs)                             档案的建立时间已被改变
+文件类型含义：
+●c (config file)                               配置文件 
+●d (documentation)                             文件数据文件 
+●g (ghost file)                                鬼档案 
+●l (license file)                              许可证文件 
+●r (read me)                                   自述文件 
+------------------------------------------------------------------
+相关指令：
+rpm -i                                          安装 rpm 包
+rpm -ivh                                        安装 rpm 包并显示安装信息与进度
+rpm -Uvh                                        更新软件
+rpm -Fvh                                        升级软件
+rpm -q                                          仅查询软件是否安装
+rpm -qa                                         列出所有已安装的软件
+rpm -qi                                         列出软件详细信息
+rpm -ql                                         列出该软件所有的档案与目录所在完整文件名
+rpm -qc                                         列出该软件的所有配置文件
+rpm -qd                                         列出该软件的所有说明文件
+rpm -qR                                         列出与该软件有关的相依软件所含的档案
+rpm -qf                                         找出该档案属亍哪一个已安装的软件
+rpm -qp                                         找出 某个 RPM 档案内的信息
+rpm -V                                          列出软件是否被更改过
+rpm -Vf                                         列出某个文档是否被更改过
+rpm -e                                          移除软件
+------------------------------------------------------------------
+SRPM 的使用 rpmbuild
+
+rpmbuild 参数：
+●--rebuild                                     会将 SRPM 编译和打包
+●--recompile                                   编译打包并安装
+
+SRPM 使用的路径与需要的软件：
+●/usr/src/redhat/SPECS                         该软件的配置文件
+●/usr/src/redhat/SOURCES                       该软件的原始文件及 config 配置文件
+●/usr/src/redhat/BUILD                         编译过程中的暂存文件
+●/usr/src/redhat/RPMS                          RPM编译成功后的打包文件
+●/usr/src/redhat/SRPMS                         SRPM编译成功后的打包文件
+
+软件系统整体信息说明：
+●Summary                                       软件的整体说明
+●Name                                          软件名称
+●Version                                       软件版本
+●Release                                       打包次数说明
+●License                                       软件授权模式
+●Group                                         软件开发团体名称
+●Url                                           源始码的主要官方网站
+●Source                                        软件的来源
+●Patch                                         软件的补丁文件
+●BuildRoot                                     编译时的暂存中间档存放目录
+●ExclusiveArch                                 适合安装软件的硬件环境
+●Requires                                      需要其他软件的支持
+●Prereq                                        软件需要的前驱程序
+●BuildRequires                                 编译过程中需要的软件
+●Packager                                      打包者
+●Vender                                        发展的厂商
+
+●%description                                  软件的简短说明
+●%prep                                         安装前需要做的事情
+●%setup                                        解压缩工作
+●%build                                        编译工作
+●%install                                      安装软件
+●%clean                                        软件安装完成后的清理工作
+●%files                                        软件安装需要的相关文件
+●%changelog                                    记录软件修改历史
+------------------------------------------------------------------
+YUM 在线升级机制
+------------------------------------------------------------------
