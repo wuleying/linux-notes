@@ -124,5 +124,39 @@ SRPM 使用的路径与需要的软件：
 ●%files                                        软件安装需要的相关文件
 ●%changelog                                    记录软件修改历史
 ------------------------------------------------------------------
+相关指令：
+rpmbuild -ba                                    编译并同时产生 RPM 与 SRPM 档案
+rpmbuild -bb                                    仅编译成 RPM 档案
+------------------------------------------------------------------
 YUM 在线升级机制
+
+yum 配置文件 /etc/yum.repos.d/CentOS-Base.repo 说明：
+●[base]                                        容器的名称
+●name                                          说明容器的意义
+●mirrorlist                                    容器使用的镜像列表
+●baseurl                                       容器的实际地址，重要
+●enable                                        容器是否启用
+●gpgcheck                                      是否检查 RPM 档案的数字签名
+●gpgkey                                        数字签名公钥文件所在位置
+------------------------------------------------------------------
+相关指令：
+yum search                                      搜寻磁盘阵列(raid)相关的软件
+yum info                                        显示某个软件功能信息
+yum list                                        列出 yum 服务器上提供的所有软件名称
+yum list updates                                列出当前 yum 服务器上可以提供本机进行升级的软件名称
+yum provides passwd                             列出提供 passwd 这个档案的软件
+
+yum install                                     安装软件
+yum update                                      升级更新软件
+yum -y update                                   系统自动升级
+yum remove                                      移除软件
+yum repolist all                                列出 yum 服务所使用的容器
+
+yum clean packages                              将已下载的软件档案删除
+yum clean headers                               将已下载的软件文件头删除
+yum clean all                                   将所有容器数据删除
+
+yum grouplist                                   显示容器与本机上可用与安装过的软件群组
+yum groupinfo                                   显示某个软件群组信息
+yum groupinstall                                安装某个软件群组
 ------------------------------------------------------------------
