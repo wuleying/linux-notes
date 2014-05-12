@@ -1,0 +1,57 @@
+第二十四章、X Window 设定介绍
+
+------------------------------------------------------------------
+什么是 X Window System
+
+名词解释：
+●GUI                                           图形接口 Graphical User Interface
+●WM                                            窗口管理员 Window Manager
+●XFS                                           X Server 字型库 X Font Server
+
+基本概念：
+●在 Unix Like 上面的图形用户接口(GUI)被称为 X 或 X11
+●X11 是一个软件而不是一个操作系统
+●X11 是利用网络架构来进行图形接口的执行与绘制
+●较著名的 X 版本为 X11R6 这一版，目前大部分的 X 都是这一版演化出来的(包括 X11R7)
+●现在大部分的 distribution 使用的 X 都是由 Xorg 基金会所提供的 X11 软件
+●X11 使用的是 MIT 授权，为类似 GPL 的自由软件授权方式
+
+主要组件：
+●X Server                                      硬件管理、屏幕绘制与提供字型功能
+●X Client                                      负责 X Server 要求的事件处理
+●X Window Manager                              特殊的 X Client 管理所有的 X Client 软件
+●Display Manager                               提供登入需求
+
+常见的 WM 窗口管理员程序：
+●GNOME                                         GNU Network Object Model Environment
+●KDE                                           K Desktop Enviroment
+●TWM                                           Tab Window Manager
+●XFCE                                          XForms Common Environment
+
+X Window 的启动流程：
+●通过 startx 指令在文字接口启动 X
+●由 startx 呼叫执行的 xinit
+●启动 X Server 的档案 xserverrc
+●启动 X Client 的档案 xinitrc
+●X 启动相应端口
+
+/etc/X11/xorg.conf 设定：
+●Module                                        被加载到 X Server 当中的模块
+●InputDevice                                   包括输入的键盘格式、鼠标格式、及其他相关输入设备
+●Files                                         设定字型所在的目录位置等
+●Monitor                                       监规器的格式，主要是设定水平、垂直的更新频率，与硬件有关
+●Device                                        显示适配器芯片组的相关设定
+●Screen                                        屏幕上显示的相关分辨率不颜色深度的设定项目
+●ServerLayout                                  上述的每个项目都可以重复设定，这里则是此 X Server 要取用的哪个项目值的设定
+------------------------------------------------------------------
+相关指令：
+startx                                          启动图形界面
+X                                               图形界面指令
+gtf                                             调整屏幕分辨率
+
+chkfontpath                                     获取当前系统所有的字体档案目录
+mkfontdir                                       生成 fonts.dir 文件夹
+xlsofnts                                        列表显示匹配给定模式的字体，如果没有给定模式，那么显示所有字体的列表
+fc-cache                                        在给定目录中生成 FreeType 字体文件的索引
+fc-list                                         查看所有字体
+------------------------------------------------------------------
