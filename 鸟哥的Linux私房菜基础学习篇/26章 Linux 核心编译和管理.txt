@@ -1,0 +1,69 @@
+第二十六章、Linux 核心编译和管理
+
+------------------------------------------------------------------
+编译前的任务：认识核心与取得核心原始码
+
+核心编译的目的：
+●新功能的需求
+●原本核心太过臃肿
+●与硬件搭配的稳定性
+●其他需求，如嵌入式系统
+
+核心原始码下的目录：
+●arch                                          与硬件平台有关的项
+●block                                         与成组设备较相关的设定数据
+●crypto                                        核心所支持的加密技术
+●Documentation                                 与核心有关的说明文件
+●drivers                                       一些硬件的驱动程序
+●firmware                                      一些旧式硬件的微脚本数据
+●fs                                            核心所支持的文件系统
+●include                                       一些可以让其他过程调用的标头(header)定义数据
+●init                                          一些核心初始化的定义功能
+●ipc                                           定义 Linux 操作系统内各程序的沟通
+●kernel                                        定义核心的程序、状态、线程、排程(schedule)、讯号(signle)等
+●lib                                           一些函式库
+●mm                                            与内存单元有关的数据
+●net                                           与网络有关的协议数据
+●security                                      包括 selinux 等在内的安全性设定
+●sound                                         与音效有关的各项模块
+●virt                                          与虚拟化机器有关的信息
+------------------------------------------------------------------
+核心编译的前处理与核心功能选择
+
+核心功能细项选择：
+●General setup                                 与 Linux 最相关的程序互动、核心版本说明、是否使用发展中程序代码等信息都在这里设定
+●loadable module + block layer                 让核心能够支持动态的核心模块
+●Processor type and features                   CPU 的类型与功能选择
+●Power management and ACPI options             电源管理功能
+●bus                                           一些总线的选项
+●Executable file formats/Emulations            编译后执行档的格式
+●Networking support                            核心的网络功能
+●Device Drivers                                各项装置的驱动程序
+●filesystem                                    文件系统的支持
+●Kernel hacking                                核心黑客、信息安全、密码应用
+●Virtualization/Library routines               虚拟化与函式库
+------------------------------------------------------------------
+核心的编译和安装
+
+开始安装新核心与多重核心选单(grub)：
+●移动核心到 /boot 并保留旧核心档案
+●建立相对应的 Initial Ram Disk(initrd)
+●编辑开机选单(grub)
+●重新以新核心开机、测试、修改
+------------------------------------------------------------------
+相关指令：
+make mrproper                                   删除所有的编译生成文件，还有内核配置文件，再加上各种备份文件
+make clean                                      删除大多数的编译生成文件，但是会保留内核的配置文件.config，还有足够的编译支持来建立扩展模块
+make menuconfig                                 文本模式底下可以显示类似图形接口的方式
+make oldconfig                                  通过使用已存在的 .config 档案内容，使用该档案内的设定值为默认值
+make xconfig                                    通过以 Qt 为图形接口基础功能的图形化接口显示，需 X Window 支持
+make gconfig                                    通过以 Gtk 为图形接口基础功能的图形化接口显示，需 X Window 支持
+make config                                     最旧式的功能挑选方法，每个项目都以条列式列出供选择
+make help                                       所有可用编译参数
+make bzImage                                    编译核心
+make modules                                    编译模块
+make modules_install                            安装模块
+
+mkinitrd                                        建立 initrd
+modprobe                                        自动处理可载入模块
+------------------------------------------------------------------
